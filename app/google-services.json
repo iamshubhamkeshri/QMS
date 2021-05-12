@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "240082764595",
+    "project_id": "qms-main-spcodelab",
+    "storage_bucket": "qms-main-spcodelab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:240082764595:android:6e95c4ba4ae993d318b446",
+        "android_client_info": {
+          "package_name": "com.spcodelab.qms"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "240082764595-u2ch65qs6kqqj62lj27i54clgpnl7bon.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCb-2vu0VO6SOuFUUWw3SR2ZAAOGFTfhCc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "240082764595-u2ch65qs6kqqj62lj27i54clgpnl7bon.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

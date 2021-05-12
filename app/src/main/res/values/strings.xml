@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">QMS</string>
+    <string name="signin">SIGN IN</string>
+    <string name="signup">SIGN UP</string>
+    <string name="logout">LOG OUT</string>
+    <string name="signupNow">Don\'t Have an Account?\nSign Up As</string>
+    <string name="signinNow">Already Have an Account?\nSign In</string>
+    <string name="name">Full Name</string>
+    <string name="mobileNo">Mobile Number</string>
+    <string name="email">Email</string>
+    <string name="dob">Date of Birth</string>
+    <string name="password">Password</string>
+    <string name="select_your_photo">🔝\nSelect your photo</string>
+
+    <string name="confirm_password">Confirm Password</string>
+    <string name="welcome_to_qms">welcome to QMS</string>
+    <string name="signout">SignOut</string>
+    <string name="profile">Profile</string>
+    <string name="Services">Services</string>
+    <string name="WaitingList">Waiting List</string>
+    <string name="select_your_Logo">Select Your Logo</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="about_admin">About Admin</string>
+    <string name="about_developer">About Developer</string>
+    <string name="deltail_developer">We\'re are group of developer,\nwho are proficient and professional in the work.\n For every kind of android application and web application,\nContact us on given below platforms,\nwe are available to be hired.</string>
+    <string name="FAQs"><![CDATA[1. What is this app about?\n\nAns-> This app is created to resolve day to day issue. If your service provider is using this app then you can avail the services without hustling and standing in queue.]]></string>
+    <string name="camera_access_required">Camera access is required to display the camera preview.</string>
+    <string name="get_token">GET TOKEN</string>
+    <string name="QR_verification_successful">QR VERIFICATION SUCCESSFUL</string>
+</resources>

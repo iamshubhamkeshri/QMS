@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".mainPartnerFragments.ProfilePartnerFragment">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/layout_settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="17.5dp"
+                        android:layout_marginEnd="23dp"
+                        android:layout_marginBottom="16.5dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:background="@drawable/icon1">
+
+                            <ImageView
+                                android:id="@+id/userImage"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:clickable="true"
+                                android:contentDescription="USER IMAGE"
+                                android:scaleType="centerCrop" />
+
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="26.5dp"
+                            android:baselineAligned="false"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <EditText
+                                android:id="@+id/regName"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg"
+                                android:drawableStart="@drawable/ic_account_box"
+                                android:drawablePadding="8dp"
+                                android:hint="Firm Name"
+                                android:inputType="text"
+                                android:paddingStart="10dip"
+                                android:paddingEnd="26dip"
+                                android:textCursorDrawable="@drawable/cursor_color" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#e6e6e6"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingStart="21dp"
+                        android:paddingTop="21dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="16dp"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/lato_black"
+                            android:gravity="center"
+                            android:text="Personal Details"
+                            android:textColor="#1b1d1d"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#e6e6e6"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingStart="21dp"
+                        android:paddingTop="21dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="16dp">
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/flat_grey_button"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:text="Rating"
+                                android:textColor="#ffffff" />
+
+                            <TextView
+                                android:id="@+id/rating"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:text="65"
+                                android:textColor="#ffffff"
+                                android:textSize="20dp" />
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_marginStart="10dp"
+                            android:layout_width="0dp"
+                            android:layout_weight="0.5"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/flat_orange_button"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:text="Rated By"
+                                android:textColor="#ffffff" />
+
+                            <TextView
+                                android:id="@+id/ratedby"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center"
+                                android:text="19"
+                                android:textColor="#ffffff"
+                                android:textSize="20dp" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linear_layout_notifications"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="13.5dp"
+                            android:paddingRight="20dp"
+                            android:paddingBottom="13.5dp">
+
+
+                            <EditText
+                                android:id="@+id/regAddress"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg"
+                                android:drawableStart="@drawable/ic_baseline_location_city_24"
+                                android:drawablePadding="8dp"
+                                android:hint="Address"
+                                android:inputType="text"
+                                android:paddingStart="10dip"
+                                android:paddingEnd="26dip"
+                                android:textCursorDrawable="@drawable/cursor_color" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="13.5dp"
+                            android:paddingRight="20dp"
+                            android:paddingBottom="13.5dp">
+
+
+                            <EditText
+                                android:id="@+id/regLocation"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg"
+                                android:drawableStart="@drawable/ic_baseline_location_city_24"
+                                android:drawablePadding="8dp"
+                                android:enabled="false"
+                                android:hint="Location"
+                                android:inputType="text"
+                                android:paddingStart="10dip"
+                                android:paddingEnd="26dip"
+                                android:textCursorDrawable="@drawable/cursor_color" />
+
+                            <EditText
+                                android:id="@+id/regServiceType"
+                                android:layout_width="0dp"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg"
+                                android:drawableStart="@drawable/ic_baseline_location_city_24"
+                                android:drawablePadding="8dp"
+                                android:enabled="false"
+                                android:hint="Service Type"
+                                android:inputType="text"
+                                android:paddingStart="10dip"
+                                android:paddingEnd="26dip"
+                                android:textCursorDrawable="@drawable/cursor_color" />
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#e6e6e6" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="13.5dp"
+                            android:paddingRight="20dp"
+                            android:paddingBottom="13.5dp">
+
+                            <EditText
+                                android:id="@+id/regAverageServiceTime"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:background="@drawable/bg"
+                                android:drawableStart="@drawable/ic_account_box"
+                                android:drawablePadding="8dp"
+                                android:hint="Average Service Time in (min)"
+                                android:inputType="number"
+                                android:paddingStart="10dip"
+                                android:paddingEnd="26dip"
+                                android:textCursorDrawable="@drawable/cursor_color" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linear_layout_do_not_disturb"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#e6e6e6" />
+
+                            <LinearLayout
+                                android:id="@+id/linear_layout_notifications_do_not_disturb_from"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="16dp"
+                                android:paddingRight="20dp"
+                                android:paddingBottom="16dp">
+
+                                <EditText
+                                    android:id="@+id/regEmail"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:background="@drawable/bg"
+                                    android:drawableStart="@drawable/ic_account_box"
+                                    android:drawablePadding="8dp"
+                                    android:enabled="false"
+                                    android:hint="Email"
+                                    android:inputType="text"
+                                    android:paddingStart="10dip"
+                                    android:paddingEnd="26dip"
+                                    android:textCursorDrawable="@drawable/cursor_color" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#e6e6e6" />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingStart="21dp"
+                        android:paddingTop="21dp"
+                        android:paddingEnd="20dp"
+                        android:paddingBottom="16dp">
+
+
+                        <Button
+                            android:id="@+id/update_button"
+                            style="?android:textAppearanceSmall"
+                            android:layout_width="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:layout_marginBottom="50dp"
+                            android:background="@drawable/button"
+                            android:elevation="8dp"
+                            android:gravity="center"
+                            android:padding="0dp"
+                            android:text="Update"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#e6e6e6" />
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+        <com.wang.avi.AVLoadingIndicatorView
+            android:id="@+id/avi"
+            style="@style/AVLoadingIndicatorView.Large"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:elevation="10dp"
+            android:visibility="gone"
+            app:indicatorColor="@android:color/holo_orange_light"
+            app:indicatorName="BallScaleMultipleIndicator" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</FrameLayout>
