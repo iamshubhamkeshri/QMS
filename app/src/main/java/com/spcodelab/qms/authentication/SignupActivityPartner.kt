@@ -22,8 +22,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.StorageReference
 import com.spcodelab.qms.CommanClass.*
-import com.spcodelab.qms.mainActivity.MainActivityPartner
 import com.spcodelab.qms.R
+import com.spcodelab.qms.mainActivity.MainActivityPartner
 import com.spcodelab.qms.models.PartnerDataModel
 import com.wang.avi.AVLoadingIndicatorView
 import org.angmarch.views.NiceSpinner
@@ -95,18 +95,18 @@ class SignupActivityPartner : AppCompatActivity() {
         }
 
         location_spinner.setOnSpinnerItemSelectedListener { parent, view, position, id ->
-            Location = parent.getItemAtPosition(position).toString();
+            Location = parent.getItemAtPosition(position).toString()
         }
 
         val service_spinner = findViewById<View>(R.id.signup_service_type) as NiceSpinner
-        val dataset: List<String> = LinkedList(Arrays.asList( "Hospital","Hospital","Bank","RailWays","Airport","Movie", "Saloon", "Restaurant", "ServiceCenter"))
+        val dataset: List<String> = LinkedList(Arrays.asList("Hospital", "Hospital", "Bank", "RailWays", "Airport", "Movie", "Saloon", "Restaurant", "ServiceCenter"))
 
         findViewById<TextView>(R.id.signup_service_type).setOnClickListener {
             service_spinner.attachDataSource(dataset)
         }
 
         service_spinner.setOnSpinnerItemSelectedListener { parent, view, position, id ->
-            Service = parent.getItemAtPosition(position).toString();
+            Service = parent.getItemAtPosition(position).toString()
         }
 
 
@@ -145,7 +145,7 @@ class SignupActivityPartner : AppCompatActivity() {
         FirebaseDatabase.getInstance().reference.child("ServiceableLocation").addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 locations.add("Delhi")
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     for (snapshot in dataSnapshot.children) {
                         locations.add(snapshot.key.toString())
                     }
@@ -263,12 +263,12 @@ class SignupActivityPartner : AppCompatActivity() {
 
     //upload user's profile pic
     private fun uploadImage(imageView: ShapeableImageView) {
-        imageView.setDrawingCacheEnabled(true)
+        imageView.isDrawingCacheEnabled = true
         imageView.buildDrawingCache()
         val bitmap: Bitmap = imageView.getDrawingCache(true)
         val byteArrayOutputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream)
-        imageView.setDrawingCacheEnabled(false)
+        imageView.isDrawingCacheEnabled = false
         val bytes = byteArrayOutputStream.toByteArray()
         val user: FirebaseUser? = mAuth.currentUser
         //saving in mentioned dir
@@ -300,21 +300,25 @@ class SignupActivityPartner : AppCompatActivity() {
 
     private fun saveData(firmName: String, address: String, avg_service_time: String, email: String, imageUrl: String) {
 
-        val mUserData = PartnerDataModel(firmName, Service, Location, address,  email, imageUrl,mAuth.currentUser?.uid,"0","0","0","0",avg_service_time)
+
+        val mUserData = PartnerDataModel(firmName, Service, Location, address, email, imageUrl, mAuth.currentUser?.uid, avg_service_time, "0", "0", "0", "0")
         val user: FirebaseUser? = mAuth.currentUser
 
         if (user != null) {
             //saving data to shared preferences
             val sharedPref: SharedPreferences = getSharedPreferences(MyPREFERENCES, MODE_PRIVATE)
             val editor = sharedPref.edit()
-            editor.putString(UserType,"Partner")
+            editor.putString(UserType, "Partner")
             editor.apply()
             editor.commit()
+
+            //setting type of user
             FirebaseDatabase.getInstance().reference.child("UserType").child(user.uid)
                     .setValue("Partner")
 
-            FirebaseDatabase.getInstance().reference.child("Queue").child(user.uid)
-                    .setValue("Not Started")
+
+            FirebaseDatabase.getInstance().reference.child("QueuePartner").child(user.uid)
+                    .setValue("NotStarted")
 
             FirebaseDatabase.getInstance().reference.child("ServicesAtLocation")
                     .child(Location.toString()).child(Service.toString()).child(user.uid).setValue(mUserData)
@@ -322,7 +326,7 @@ class SignupActivityPartner : AppCompatActivity() {
 
 
             mDatabaseReference.child("PartnersData").child(user.uid)
-                    .setValue("ServicesAtLocation/"+Location.toString()+"/"+Service.toString()+"/"+user.uid) //need an object of a
+                    .setValue("ServicesAtLocation/" + Location.toString() + "/" + Service.toString() + "/" + user.uid) //need an object of a
 
             avLoadingIndicatorView!!.visibility = View.GONE
             avLoadingIndicatorView!!.hide()
@@ -335,7 +339,4 @@ class SignupActivityPartner : AppCompatActivity() {
         }
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
 }

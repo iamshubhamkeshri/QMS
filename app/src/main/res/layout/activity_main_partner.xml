@@ -84,7 +84,7 @@
         android:layout_alignParentBottom="true"
         android:background="@color/purple_200"
         app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"
-        app:menu="@menu/bottom_navigation_menu_user" />
+        app:menu="@menu/bottom_navigation_menu_partner" />
 
 
 </RelativeLayout>

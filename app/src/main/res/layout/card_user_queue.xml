@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="18dp"
-    android:background="#F3F8FC"
+    android:background="@drawable/bg_ticket_top"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -20,27 +20,36 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/firmName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Barbeque Nation"
-                android:textColor="@color/black"
+                android:textColor="@color/Beige"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/serviceType"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Barbeque Nation"
-                android:textColor="@color/black"
+                android:textColor="@color/Beige"
                 android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Barbeque Nation"
-                android:textColor="@color/black"
-                android:textSize="18sp"/>
+                android:textColor="@color/Beige"
+                android:textSize="18sp" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/firmLogo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_shop" />
     </LinearLayout>
 
     <com.mreram.ticketview.TicketView
@@ -54,10 +63,10 @@
             android:id="@+id/cl_head"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_ticket_top">
+            android:background="@color/Beige">
 
             <TextView
-                android:id="@+id/txt_code"
+                android:id="@+id/regTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="116dp"
@@ -71,13 +80,13 @@
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/txt_price"
+                app:layout_constraintLeft_toRightOf="@+id/regDate"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
 
             <TextView
-                android:id="@+id/txt_price"
+                android:id="@+id/regDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -85,45 +94,46 @@
                 android:lineSpacingMultiplier="1.2"
                 android:paddingTop="20dp"
                 android:paddingBottom="10dp"
-                android:text="Reg Date \n2021/05/13"
+                android:text="Reg Date\n2021/05/13"
 
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/txt_code"
+                app:layout_constraintRight_toLeftOf="@id/regTime"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_center"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cl_head"
-            android:background="#fff">
-
+            android:background="@color/Beige">
             <TextView
-                android:id="@+id/txt_src"
+                android:id="@+id/currentStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:lineSpacingMultiplier="1.2"
                 android:paddingTop="20dp"
                 android:paddingBottom="10dp"
-                android:text="@string/src_city"
+                android:text="Current Status\nCancelled"
                 android:textColor="#000"
                 android:textSize="12sp"
-                app:layout_constraintLeft_toRightOf="@+id/txt_dst"
+                app:layout_constraintLeft_toRightOf="@+id/expectedTime"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
 
             <TextView
-                android:id="@+id/txt_dst"
+                android:id="@+id/expectedTime"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -132,78 +142,45 @@
                 android:lineSpacingMultiplier="1.2"
                 android:paddingTop="20dp"
                 android:paddingBottom="10dp"
-                android:text="@string/dst_city"
+                android:text="Your Turn In\n25 min"
 
                 android:textColor="#000"
                 android:textSize="12sp"
                 app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/txt_src"
+                app:layout_constraintRight_toLeftOf="@id/currentStatus"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <View
+                android:id="@+id/view"
                 android:layout_width="0dp"
                 android:layout_height="5dp"
                 android:background="@drawable/divider_container"
                 android:layerType="software"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_dst" />
+                app:layout_constraintTop_toBottomOf="@+id/expectedTime" />
 
-
-            <TextView
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:lineSpacingMultiplier="1.2"
-                android:paddingTop="20dp"
-                android:paddingBottom="10dp"
-                android:text="10/09/2019"
-                android:textColor="#000"
-                android:textSize="12sp"
-                app:layout_constraintLeft_toRightOf="@+id/txt_dst"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_src" />
-
-
-            <TextView
-                android:id="@+id/txt_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:gravity="center"
-                android:lineSpacingMultiplier="1.2"
-                android:paddingTop="20dp"
-                android:paddingBottom="10dp"
-                android:text="Ramesh Gupta"
-                android:textColor="#000"
-                android:textSize="12sp"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/txt_dst"
-                app:layout_constraintRight_toLeftOf="@id/txt_src"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_dst" />
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="5dp"
                 android:background="@drawable/divider_container"
                 android:layerType="software"
+                app:layout_constraintBottom_toTopOf="@+id/expectedTime"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_name" />
+                app:layout_constraintRight_toRightOf="parent" />
 
             <LinearLayout
+                android:id="@+id/hide"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txt_name">
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -222,6 +199,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/currentToken"
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -251,6 +229,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="16"
+                        android:id="@+id/myToken"
                         android:textSize="60dp" />
 
                 </LinearLayout>
@@ -267,7 +246,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:gravity="center"
-                        android:text="Total Token"
+                        android:text="Total Tokens"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -277,25 +256,53 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:text="16"
+                        android:id="@+id/totalTokens"
                         android:textSize="60dp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Service FeedBack"
+                    android:textColor="@color/purple"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:clickable="true"
+                    android:numStars="5" />
+            </LinearLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <Button
-            android:id="@+id/purpose1"
+            android:id="@+id/cancel"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
-
             android:layout_height="wrap_content"
             android:layout_below="@+id/cl_center"
             android:layout_marginTop="8dp"
             android:background="@drawable/flat_orange_button"
-            android:text="Purpose of Visit"
+            android:text="VIEW MORE"
             android:textColor="#ffffff" />
 
     </com.mreram.ticketview.TicketView>

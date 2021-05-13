@@ -82,7 +82,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/category_text"
+        android:id="@+id/purpose_text"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:padding="5dp"

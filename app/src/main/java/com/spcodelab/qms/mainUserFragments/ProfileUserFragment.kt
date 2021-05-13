@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -28,9 +25,10 @@ class ProfileUserFragment : Fragment() {
     private lateinit var imageView: ImageView
     private lateinit var full_name: EditText
     private lateinit var address: EditText
-    private lateinit var email_: EditText
+    private lateinit var email_: TextView
     private lateinit var dob: EditText
     var profileImageUrl: String? = null
+
     //firebase
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mStorage: FirebaseStorage
@@ -47,7 +45,7 @@ class ProfileUserFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view=inflater.inflate(R.layout.fragment_profile_user, container, false)
+        val view = inflater.inflate(R.layout.fragment_profile_user, container, false)
         //firebase
         mStorage = FirebaseStorage.getInstance()
         mAuth = FirebaseAuth.getInstance()
@@ -105,9 +103,9 @@ class ProfileUserFragment : Fragment() {
                         val userData = snapshot.getValue(UserDataModel::class.java)!!
                         full_name.setText(userData.name)
                         dob.setText(userData.dob)
-                        email_.setText(userData.email)
+                        email_.text = userData.email
                         address.setText(userData.address)
-                        profileImageUrl= userData.imageUrl
+                        profileImageUrl = userData.imageUrl
                         showImage(profileImageUrl.toString())
                     }
                 }
@@ -116,6 +114,7 @@ class ProfileUserFragment : Fragment() {
             })
         }
     }
+
     private fun showImage(profileImageUrl: String) {
 
         val options: RequestOptions = RequestOptions()
@@ -164,7 +163,7 @@ class ProfileUserFragment : Fragment() {
 
     private fun saveData(fullName: String, dob: String, email: String, url: String, address: String) {
 
-        val mUserData = UserDataModel(fullName, dob, address)
+        val mUserData = UserDataModel(fullName, dob, email, url, address)
         val user: FirebaseUser? = mAuth.currentUser
 
         if (user != null) {

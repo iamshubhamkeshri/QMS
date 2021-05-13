@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".mainUserFragments.WaitingListFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    tools:context=".mainUserFragments.WaitingListFragment"
+    android:padding="10dp">
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="hello_waithinglist_fragment"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/waitingList"
+        tools:listitem="@layout/card_user_queue"/>
+
+
 
 </FrameLayout>

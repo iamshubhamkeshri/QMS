@@ -103,9 +103,9 @@ class MainActivityUser : AppCompatActivity() {
             R.id.card_Movie -> { name="Movie Theater" }
             R.id.card_saloon -> { name="Saloon" }
             R.id.card_restaurant -> { name="Restaurant" }
-            R.id.card_servicecenter -> { name="Service Center" }
+            R.id.card_servicecenter -> { name="ServiceCenter" }
         }
-        val intent = Intent(this, AvailServices::class.java);
+        val intent = Intent(this, AvailServices::class.java)
         intent.putExtra("Service", name)
         startActivity(intent)
 

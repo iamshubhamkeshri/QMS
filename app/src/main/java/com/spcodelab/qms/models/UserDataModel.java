@@ -14,11 +14,6 @@ public class UserDataModel {
         this.address = address;
     }
 
-    public UserDataModel(String name, String dob, String address) {
-        this.name = name;
-        this.dob = dob;
-        this.address = address;
-    }
 
     public UserDataModel() {
         //This is needed for getting data

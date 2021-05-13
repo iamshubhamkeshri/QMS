@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="18dp"
+    android:background="@drawable/bg_ticket_top"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.6"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/firmName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Shubham Keshri"
+                android:textColor="@color/Beige"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/serviceType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textColor="@color/Beige"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Purpose of visit"
+                android:textColor="@color/Beige"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/firmLogo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_shop" />
+    </LinearLayout>
+
+    <com.mreram.ticketview.TicketView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        app:tv_anchor1="@+id/cl_head"
+        app:tv_anchor2="@+id/cl_center">
+
+        <LinearLayout
+            android:id="@+id/cl_head"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@color/Beige">
+
+            <TextView
+                android:id="@+id/regTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp"
+                android:text="Reg. Time 10:45 Am"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cl_center"
+            android:visibility="visible"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cl_head"
+            android:background="@color/Beige">
+            <TextView
+                android:layout_weight="1"
+                android:id="@+id/currentStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:lineSpacingMultiplier="1.2"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp"
+                android:text="Current Status\nCancelled"
+                android:textColor="#000"
+                android:textSize="16sp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="Current Token"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/currentToken"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="16"
+                    android:textSize="60dp" />
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="5dp"
+                android:background="@drawable/divider_container"
+                android:layerType="software"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/expectedTime" />
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="5dp"
+                android:background="@drawable/divider_container"
+                android:layerType="software"
+                app:layout_constraintBottom_toTopOf="@+id/expectedTime"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+
+
+            <LinearLayout
+                android:id="@+id/feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Service FeedBack"
+                    android:textColor="@color/purple"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="12dp"
+                    android:clickable="true"
+                    android:numStars="5" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cl_center"
+            android:layout_marginStart="8dp"
+            android:paddingEnd="8dp"
+            android:id="@+id/hideLayout"
+            android:layout_marginTop="8dp">
+            <Button
+                android:id="@+id/notify"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/flat_orange_button"
+                android:text="NOTIFY"
+                android:textColor="#ffffff"
+                android:layout_marginBottom="8dp"/>
+            <Button
+                android:id="@+id/cancel"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/flat_orange_button"
+                android:text="CANCEL"
+                android:textColor="#ffffff" />
+            <Button
+                android:id="@+id/complete"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/flat_orange_button"
+                android:text="CPMPLETE"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+    </com.mreram.ticketview.TicketView>
+</LinearLayout>

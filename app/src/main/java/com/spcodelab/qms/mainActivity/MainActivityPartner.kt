@@ -1,23 +1,23 @@
 package com.spcodelab.qms.mainActivity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.StorageReference
 import com.spcodelab.qms.AboutUsActivity
 import com.spcodelab.qms.R
 import com.spcodelab.qms.authentication.SigninActivity
 import com.spcodelab.qms.mainPartnerFragments.ProfilePartnerFragment
-import com.spcodelab.qms.mainUserFragments.ProfileUserFragment
-import com.spcodelab.qms.mainUserFragments.WaitingListFragment
+import com.spcodelab.qms.mainPartnerFragments.QrFragment
+import com.spcodelab.qms.mainPartnerFragments.QueuePartnerFragment
 
 class MainActivityPartner : AppCompatActivity() {
     lateinit var fragment: Fragment
@@ -59,18 +59,18 @@ class MainActivityPartner : AppCompatActivity() {
     private fun init() {
 
         supportActionBar?.setBackgroundDrawable(resources.getDrawable(R.color.purple))
-        //loadFragment(ServiceFragment())
+        loadFragment(QueuePartnerFragment())
         findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-//                R.id.navigation_services -> {
-//                    fragment = ServiceFragment()
-//                    supportActionBar?.title = resources.getString(R.string.Services)
-//                }
-                R.id.navigation_waithing_list -> {
-                    fragment = WaitingListFragment()
+                R.id.navigation_Queue -> {
+                    fragment = QueuePartnerFragment()
+                    supportActionBar?.title = resources.getString(R.string.Services)
+                }
+                R.id.navigation_qr -> {
+                    fragment = QrFragment()
                     supportActionBar?.title = resources.getString(R.string.WaitingList)
                 }
-                R.id.navigation_profile -> {
+                R.id.navigation_profile_partner -> {
                     fragment = ProfilePartnerFragment()
                     supportActionBar?.title = resources.getString(R.string.profile)
 

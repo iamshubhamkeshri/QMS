@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context=".mainPartnerFragments.QrFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="Share This QR Code With Customers To Get Token Number"
+            android:textColor="@color/Sunset_Orange"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:layout_below="@id/title_card"
+            android:background="@drawable/divider_container"
+            android:layerType="software" />
+
+        <ImageView
+            android:layout_marginTop="50dp"
+            android:layout_below="@id/title_card"
+            android:id="@+id/qr"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="80dp"
+            android:src="@drawable/scanqrcode" />
+
+    </RelativeLayout>
+
+</FrameLayout>
