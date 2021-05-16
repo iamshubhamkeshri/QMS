@@ -284,6 +284,7 @@ public class QueuePartnerFragment extends Fragment {
                 });
 
                 holder.notify.setOnClickListener(v -> {
+                    FirebaseDatabase.getInstance().getReference().child("AlertUser").child(model.getCustomerUID()).setValue("1");
                     Toast.makeText(getContext(), "User Notified", Toast.LENGTH_SHORT).show();
                 });
 

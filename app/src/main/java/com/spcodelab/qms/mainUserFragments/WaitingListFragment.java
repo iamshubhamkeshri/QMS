@@ -1,14 +1,20 @@
 package com.spcodelab.qms.mainUserFragments;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import es.dmoral.toasty.Toasty;
+
 import static com.spcodelab.qms.CommanClass.alertNoConnection;
 import static com.spcodelab.qms.CommanClass.isNetworkAvailable;
 
@@ -55,11 +63,12 @@ public class WaitingListFragment extends Fragment {
     String currentUserUID;
     String canceledTokens;
     int currentToken, totalToken;
+    Vibrator vibrator;
+    boolean israted = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -68,6 +77,8 @@ public class WaitingListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_waiting_list, container, false);
 
+        vibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+
         recyclerView = view.findViewById(R.id.waitingList);
         linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -75,8 +86,11 @@ public class WaitingListFragment extends Fragment {
         if (isNetworkAvailable(getContext())) {
             currentUserUID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
             fetchQuery();
+            RemainderFromUser();
         } else
             alertNoConnection(getContext());
+
+
         return view;
     }
 
@@ -110,6 +124,10 @@ public class WaitingListFragment extends Fragment {
                 holder.currentStatus.setText("Current Status\n" + model.getStatus());
 
 
+//                if(currentToken==Integer.parseInt(model.getMyToken())){
+//                    Toast.makeText(getContext(), "its your turn", Toast.LENGTH_SHORT).show();
+//
+//                }
                 RequestOptions options = new RequestOptions()
                         .fitCenter()
                         .placeholder(R.drawable.ic_shop)
@@ -159,6 +177,28 @@ public class WaitingListFragment extends Fragment {
                                         holder.expectedTime.setText("Your Turn In -\n" + expected_time + " min");
                                     } else if (expected_time == 0) {
                                         holder.expectedTime.setText("Its Your Turn");
+
+                                        // Show message when its users turn
+                                        vibrator.vibrate(2000);
+                                        Dialog builder = new Dialog(getContext());
+                                        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                        builder.getWindow().setBackgroundDrawable(
+                                                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                                        builder.setOnDismissListener(dialogInterface -> {
+                                            //nothing;
+                                        });
+
+
+                                        Toasty.info(getContext(), "Its Your Turn at "+ model.getFirmName(), Toasty.LENGTH_LONG).show();
+
+                                        ImageView imageView = new ImageView(getContext());
+                                        Glide.with(getContext()).load(R.drawable.run).into(imageView);
+                                        //imageView.setImageResource(R.drawable.nowifi);
+                                        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                                                400,
+                                                500));
+                                        builder.show();
+
                                     } else {
                                         holder.expectedTime.setText("Your Turn Is -\n" + "Missed");
                                     }
@@ -231,31 +271,30 @@ public class WaitingListFragment extends Fragment {
                                 })
                                 .setNegativeButton(android.R.string.no, null).show();
 
-                    } else if (holder.button.getText().equals("RATE NOW")) {
-                        if (holder.ratingBar.getRating() != 0 && model.getRating().equals("0")) {
-                            holder.button.setEnabled(false);
-                            FirebaseDatabase.getInstance().getReference().child("PartnerRating").child(model.getFirmUID())
-                                    .addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if (snapshot.exists()) {
-                                                PartnerRatingModel rModel = snapshot.getValue(PartnerRatingModel.class);
-                                                double rating = Double.parseDouble(rModel.getRating());
-                                                int ratedBy = Integer.parseInt(rModel.getRatedBy());
-                                                rating = ((rating * ratedBy) + holder.ratingBar.getRating()) / (ratedBy + 1);
-                                                ratedBy = ratedBy + 1;
-                                                PartnerRatingModel rUpdateModel = new PartnerRatingModel(String.valueOf(rating), String.valueOf(ratedBy));
-                                                FirebaseDatabase.getInstance().getReference().child("PartnerRating").child(model.getFirmUID()).setValue(rUpdateModel);
-                                                FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID).child(model.getFirmUID()).child("rating").setValue(String.valueOf(rating));
-                                            }
-                                        }
+                    } else if (holder.button.getText().equals("RATE NOW") && holder.ratingBar.getRating() != 0) {
 
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {
-
+                        FirebaseDatabase.getInstance().getReference().child("PartnerRating").child(model.getFirmUID())
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        if (snapshot.exists() && !israted) {
+                                            PartnerRatingModel rModel = snapshot.getValue(PartnerRatingModel.class);
+                                            double rating = Double.parseDouble(rModel.getRating());
+                                            int ratedBy = Integer.parseInt(rModel.getRatedBy());
+                                            rating = ((rating * ratedBy) + holder.ratingBar.getRating()) / (ratedBy + 1);
+                                            ratedBy = ratedBy + 1;
+                                            PartnerRatingModel rUpdateModel = new PartnerRatingModel(String.valueOf(rating), String.valueOf(ratedBy));
+                                            FirebaseDatabase.getInstance().getReference().child("PartnerRating").child(model.getFirmUID()).setValue(rUpdateModel);
+                                            FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID).child(model.getFirmUID()).child("rating").setValue(String.valueOf(rating));
+                                            israted = true;
                                         }
-                                    });
-                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
                     }
 
                 });
@@ -308,6 +347,42 @@ public class WaitingListFragment extends Fragment {
             feedback = itemView.findViewById(R.id.feedback);
             ratingBar = itemView.findViewById(R.id.ratingBar);
         }
+    }
+
+    private void RemainderFromUser(){
+        //alert User at there turn
+        FirebaseDatabase.getInstance().getReference().child("AlertUser").child(currentUserUID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    if (snapshot.getValue().toString().equals("1")) {
+                        vibrator.vibrate(2000);
+                        Dialog builder = new Dialog(getContext());
+                        builder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        builder.getWindow().setBackgroundDrawable(
+                                new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        builder.setOnDismissListener(dialogInterface -> {
+                            //nothing;
+                        });
+
+                        Toasty.info(getContext(), "Service Partner Reminded you", Toasty.LENGTH_LONG).show();
+                        ImageView imageView = new ImageView(getContext());
+                        Glide.with(getContext()).load(R.drawable.reminder).into(imageView);
+                        //imageView.setImageResource(R.drawable.nowifi);
+                        builder.addContentView(imageView, new RelativeLayout.LayoutParams(
+                                400,
+                                500));
+                        builder.show();
+                    }
+                    FirebaseDatabase.getInstance().getReference().child("AlertUser").child(currentUserUID).setValue("0");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 
