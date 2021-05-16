@@ -1,5 +1,6 @@
 package com.spcodelab.qms.mainUserFragments;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,12 +32,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.spcodelab.qms.R;
-import com.spcodelab.qms.models.PartnerDataModel;
+import com.spcodelab.qms.models.PartnerRatingModel;
+import com.spcodelab.qms.models.QueueStatusModel;
 import com.spcodelab.qms.models.QueueUserModel;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.spcodelab.qms.CommanClass.alertNoConnection;
@@ -48,219 +53,35 @@ public class WaitingListFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private AVLoadingIndicatorView avLoadingIndicatorView;
     String currentUserUID;
+    String canceledTokens;
+    int currentToken, totalToken;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-
-        View view=inflater.inflate(R.layout.fragment_waiting_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_waiting_list, container, false);
 
         recyclerView = view.findViewById(R.id.waitingList);
         linearLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setHasFixedSize(true);
 
         if (isNetworkAvailable(getContext())) {
             currentUserUID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-            //fetchQuery();
-            //firebaseRecyclerAdapter.startListening();
+            fetchQuery();
         } else
             alertNoConnection(getContext());
-
-
-
         return view;
     }
 
     private void fetchQuery() {
-        Query query = FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID);
-
-//        FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//               if (snapshot.exists()){
-//                   Toast.makeText(getContext(),snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
-//               }else{
-//                   Toast.makeText(getContext(), "not found", Toast.LENGTH_SHORT).show();
-//               }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
-
-        FirebaseRecyclerOptions<QueueUserModel> options =
-                new FirebaseRecyclerOptions.Builder<QueueUserModel>()
-                        .setQuery(query, QueueUserModel.class)
-                        .build();
-
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<QueueUserModel, QueueHolder>(options) {
-            @NotNull
-            @Override
-            public QueueHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.card_user_queue, parent, false);
-
-                return new QueueHolder(view);
-            }
-
-            @Override
-            protected void onBindViewHolder(@NotNull    QueueHolder holder, final int position, @NotNull QueueUserModel model) {
-                holder.firmName.setText(model.getFirmName());
-                holder.address.setText(model.getAddress());
-
-                holder.firmName.setText(model.getFirmName());
-                holder.serviceType.setText(model.getServiceType());
-                holder.address.setText(model.getAddress()+" ("+model.getLocation()+" )");
-
-
-                RequestOptions options = new RequestOptions()
-                        .fitCenter()
-                        .placeholder(R.drawable.ic_shop)
-                        .error(R.drawable.noimage)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .priority(Priority.HIGH)
-                        .dontAnimate()
-                        .dontTransform();
-
-
-                Glide.with(getContext())
-                        .load(model.getFirmLogoUrl())
-                        .apply(options)
-                        .into(holder.firmImage);
-                holder.regDate.setText("Reg Date\n"+model.getRegDate());
-                holder.regTime.setText("Reg. Time\n"+model.getRegTime());
-
-                int expected_time=(Integer.parseInt(model.getMyToken())-Integer.parseInt(model.getCurrentToken()))*Integer.parseInt(model.getAvgServiceTime());
-                holder.expectedTime.setText("\n"+ expected_time);
-                holder.currentStatus.setText("Current Status\n"+model.getStatus());
-                if(model.getStatus().equals("Completed")||model.getStatus().equals("Canceled")||model.getStatus().equals("Suspended")){
-                    holder.tokenLayout.setVisibility(View.GONE);
-                    holder.expectedTime.setVisibility(View.GONE);
-                    holder.refresh.setVisibility(View.GONE);
-                    holder.cancelVisit.setText("RATE");
-                    holder.feedback.setVisibility(View.GONE);
-                }
-                holder.myToken.setText(model.getMyToken());
-                holder.currentToken.setText(model.getCurrentToken());
-                holder.totalToken.setText(model.getTotalToken());
-                holder.refresh.setOnClickListener(v -> {
-                    FirebaseDatabase.getInstance().getReference().child("ServiceAtLocation")
-                            .child(model.getLocation()).child(model.getServiceType()).child(model.getFirmUID()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()){
-                                PartnerDataModel partnerDataModel=snapshot.getValue(PartnerDataModel.class);
-                                int expected_time=(Integer.parseInt(model.getMyToken())-Integer.parseInt(partnerDataModel.getCurrentToken()))*Integer.parseInt(model.getAvgServiceTime());
-                                holder.expectedTime.setText("Your Turn In\n"+ expected_time);
-                                holder.totalToken.setText(partnerDataModel.getTotalToken());
-                                holder.currentToken.setText(partnerDataModel.getCurrentToken());
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                });
-
-
-                holder.cancelVisit.setOnClickListener(v ->{
-                    if(holder.cancelVisit.getText().equals("CANCEL VISIT")){
-                        FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID).child("status").setValue("Canceled");
-                    }else{
-                        FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID)
-                                .child("rating").setValue(String.valueOf(holder.ratingBar.getRating()));
-                    }
-
-                });
-
-
-
-            }
-
-        };
-        recyclerView.setAdapter(firebaseRecyclerAdapter);
-
-//        avLoadingIndicatorView.setVisibility(View.GONE);
-//        avLoadingIndicatorView.hide();
-    }
-
-    static class QueueHolder extends RecyclerView.ViewHolder {
-        public TextView firmName;
-        public TextView serviceType;
-        public TextView address;
-        public TextView expectedTime;
-        public TextView currentStatus;
-        public TextView regTime;
-        public TextView regDate;
-        public ImageView refresh;
-        public ImageView firmImage;
-        private final TextView currentToken;
-        private final TextView totalToken;
-        public TextView myToken;
-        public Button cancelVisit;
-        public LinearLayout tokenLayout;
-        public LinearLayout feedback;
-        public RatingBar ratingBar;
-        public ConstraintLayout hiddenLayout;
-
-
-        public QueueHolder(@NonNull View itemView) {
-            super(itemView);
-            firmName = itemView.findViewById(R.id.firmName);
-            serviceType = itemView.findViewById(R.id.serviceType);
-            address = itemView.findViewById(R.id.address);
-            expectedTime = itemView.findViewById(R.id.expectedTime);
-            currentStatus = itemView.findViewById(R.id.currentStatus);
-            regTime = itemView.findViewById(R.id.regTime);
-            regDate = itemView.findViewById(R.id.regDate);
-            hiddenLayout =itemView.findViewById(R.id.cl_center);
-            firmImage = itemView.findViewById(R.id.firmLogo);
-            currentToken = itemView.findViewById(R.id.currentToken);
-            totalToken = itemView.findViewById(R.id.totalTokens);
-            myToken = itemView.findViewById(R.id.myToken);
-            cancelVisit = itemView.findViewById(R.id.cancel);
-            tokenLayout = itemView.findViewById(R.id.hide);
-            feedback = itemView.findViewById(R.id.feedback);
-            ratingBar = itemView.findViewById(R.id.ratingBar);
-        }
-    }
-
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        Query query = FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID);
-
-//        FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID).child("10PUbloYl6PZ96HNMPEEo7PbNO62").addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//               if (snapshot.exists()){
-//                   QueueUserModel queueUserModel=snapshot.getValue(QueueUserModel.class);
-//                   Toast.makeText(getContext(),queueUserModel.getFirmName(), Toast.LENGTH_SHORT).show();
-//               }else{
-//                   Toast.makeText(getContext(), "not found", Toast.LENGTH_SHORT).show();
-//               }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-
+        Query query = FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID).orderByChild("regDate");
 
         FirebaseRecyclerOptions<QueueUserModel> options =
                 new FirebaseRecyclerOptions.Builder<QueueUserModel>()
@@ -284,7 +105,9 @@ public class WaitingListFragment extends Fragment {
 
                 holder.firmName.setText(model.getFirmName());
                 holder.serviceType.setText(model.getServiceType());
-                holder.address.setText(model.getAddress()+" ("+model.getLocation()+" )");
+                holder.address.setText(model.getAddress() + " ( " + model.getLocation() + " )");
+                holder.purpose.setText("Purpose: " + model.getPurposeOfVisit());
+                holder.currentStatus.setText("Current Status\n" + model.getStatus());
 
 
                 RequestOptions options = new RequestOptions()
@@ -301,74 +124,203 @@ public class WaitingListFragment extends Fragment {
                         .load(model.getFirmLogoUrl())
                         .apply(options)
                         .into(holder.firmImage);
-                holder.regDate.setText("Reg Date\n"+model.getRegDate());
-                holder.regTime.setText("Reg. Time\n"+model.getRegTime());
+                holder.regDate.setText("Reg Date\n" + model.getRegDate());
+                holder.regTime.setText("Reg. Time\n" + model.getRegTime());
 
 
-
-                int expected_time=(Integer.parseInt(model.getMyToken())-Integer.parseInt(model.getCurrentToken()))*Integer.parseInt(model.getAvgServiceTime());
-                holder.expectedTime.setText("\n"+ expected_time);
-                holder.currentStatus.setText("Current Status\n"+model.getStatus());
-                if(model.getStatus().equals("Completed")||model.getStatus().equals("Canceled")||model.getStatus().equals("Suspended")){
-                    holder.tokenLayout.setVisibility(View.GONE);
-                    holder.expectedTime.setVisibility(View.GONE);
-                    holder.refresh.setVisibility(View.GONE);
-                    holder.cancelVisit.setText("RATE");
-                    holder.feedback.setVisibility(View.GONE);
+                if (model.getStatus().equals("Completed") || model.getStatus().equals("Canceled")) {
+                    holder.hiddenLayout.setVisibility(View.GONE);
+                    holder.button.setText("RATE NOW");
+                    holder.feedback.setVisibility(View.VISIBLE);
+                    if (!model.getRating().equals("0")) {
+                        holder.ratingBar.setEnabled(false);
+                        holder.button.setVisibility(View.GONE);
+                        holder.ratingBar.setRating(Float.parseFloat(model.getRating()));
+                    }
                 }
+
+
                 holder.myToken.setText(model.getMyToken());
-                holder.currentToken.setText(model.getCurrentToken());
-                holder.totalToken.setText(model.getTotalToken());
-                holder.refresh.setOnClickListener(v -> {
-                    FirebaseDatabase.getInstance().getReference().child("ServiceAtLocation")
-                            .child(model.getLocation()).child(model.getServiceType()).child(model.getFirmUID()).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()){
-                                PartnerDataModel partnerDataModel=snapshot.getValue(PartnerDataModel.class);
-                                int expected_time=(Integer.parseInt(model.getMyToken())-Integer.parseInt(partnerDataModel.getCurrentToken()))*Integer.parseInt(model.getAvgServiceTime());
-                                holder.expectedTime.setText("Your Turn In\n"+ expected_time);
-                                holder.totalToken.setText(partnerDataModel.getTotalToken());
-                                holder.currentToken.setText(partnerDataModel.getCurrentToken());
+                FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(model.getFirmUID())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()) {
+                                    QueueStatusModel queueStatusModel = snapshot.getValue(QueueStatusModel.class);
+                                    canceledTokens = queueStatusModel.getCanceledToken();
+                                    totalToken = Integer.parseInt(queueStatusModel.getTotalToken());
+                                    if (queueStatusModel.getCurrentToken().equals("NA")) {
+                                        currentToken = totalToken;
+                                    } else {
+                                        currentToken = Integer.parseInt(queueStatusModel.getCurrentToken());
+                                    }
+                                    int expected_time = (Integer.parseInt(model.getMyToken()) - currentToken) * Integer.parseInt(model.getAvgServiceTime());
+                                    if (expected_time > 0) {
+                                        holder.expectedTime.setText("Your Turn In -\n" + expected_time + " min");
+                                    } else if (expected_time == 0) {
+                                        holder.expectedTime.setText("Its Your Turn");
+                                    } else {
+                                        holder.expectedTime.setText("Your Turn Is -\n" + "Missed");
+                                    }
+                                    holder.totalToken.setText(queueStatusModel.getTotalToken());
+                                    holder.currentToken.setText(queueStatusModel.getCurrentToken());
+                                }
                             }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                            }
+
+                        });
+
+
+                holder.button.setOnClickListener(v -> {
+                    if (holder.button.getText().equals("CANCEL VISIT")) {
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("Title")
+                                .setMessage("Do you really want to cancel visit at " + model.getFirmName() + " ?")
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                    public void onClick(DialogInterface dialog, int whichButton) {
+                                        FirebaseDatabase.getInstance().getReference().child("QueueUser")
+                                                .child(currentUserUID).child(model.getFirmUID()).child("status").setValue("Canceled");
+
+                                        FirebaseDatabase.getInstance().getReference().child("QueuePartner").child(model.getFirmUID())
+                                                .child(model.getRegDate()).child(currentUserUID).child("status").setValue("Canceled");
+
+                                        if (canceledTokens.equals("null")) {
+                                            canceledTokens = null;
+                                            canceledTokens = model.getMyToken();
+                                        } else {
+                                            canceledTokens = canceledTokens + "," + model.getMyToken();
+                                        }
+
+                                        //updating current token as NA if this token is last token
+                                        if (currentToken == Integer.parseInt(model.getMyToken())) {
+                                            //FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(model.getFirmUID()).child("currentToken").setValue("NA");
+
+                                            List<Integer> intCanceledTokenList = new ArrayList<Integer>();
+                                            if (!canceledTokens.equals("null")) {
+                                                String[] canceledTokenList = canceledTokens.split("\\s*,\\s*");
+                                                for (String s : canceledTokenList)
+                                                    intCanceledTokenList.add(Integer.valueOf(s));
+                                            }
+
+
+                                            if (currentToken != totalToken) {
+                                                for (int i = currentToken + 1; i <= totalToken; i++) {
+
+                                                    if (!intCanceledTokenList.contains(i)) {
+                                                        FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(model.getFirmUID()).child("currentToken").
+                                                                setValue(String.valueOf(i));
+                                                        break;
+                                                    }
+                                                }
+                                            } else {
+                                                FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(model.getFirmUID()).child("currentToken").
+                                                        setValue("NA");
+                                            }
+                                        }
+
+                                        FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(model.getFirmUID())
+                                                .child("canceledToken").setValue(canceledTokens);
+
+                                        Toast.makeText(getContext(), "Your Visit is Canceled", Toast.LENGTH_SHORT).show();
+                                    }
+                                })
+                                .setNegativeButton(android.R.string.no, null).show();
+
+                    } else if (holder.button.getText().equals("RATE NOW")) {
+                        if (holder.ratingBar.getRating() != 0 && model.getRating().equals("0")) {
+                            holder.button.setEnabled(false);
+                            FirebaseDatabase.getInstance().getReference().child("PartnerRating").child(model.getFirmUID())
+                                    .addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            if (snapshot.exists()) {
+                                                PartnerRatingModel rModel = snapshot.getValue(PartnerRatingModel.class);
+                                                double rating = Double.parseDouble(rModel.getRating());
+                                                int ratedBy = Integer.parseInt(rModel.getRatedBy());
+                                                rating = ((rating * ratedBy) + holder.ratingBar.getRating()) / (ratedBy + 1);
+                                                ratedBy = ratedBy + 1;
+                                                PartnerRatingModel rUpdateModel = new PartnerRatingModel(String.valueOf(rating), String.valueOf(ratedBy));
+                                                FirebaseDatabase.getInstance().getReference().child("PartnerRating").child(model.getFirmUID()).setValue(rUpdateModel);
+                                                FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID).child(model.getFirmUID()).child("rating").setValue(String.valueOf(rating));
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
                         }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                });
-
-
-                holder.cancelVisit.setOnClickListener(v ->{
-                    if(holder.cancelVisit.getText().equals("VIEW MORE")){
-                        holder.hiddenLayout.setVisibility(View.VISIBLE);
-
-                    }else if(holder.cancelVisit.getText().equals("CANCLE VISIT")){
-                        FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID).child("status").setValue("Canceled");
-                    }else{
-                        FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID)
-                                .child("rating").setValue(String.valueOf(holder.ratingBar.getRating()));
                     }
 
                 });
-
 
 
             }
 
         };
         recyclerView.setAdapter(firebaseRecyclerAdapter);
-        firebaseRecyclerAdapter.startListening();
 
-
+//        avLoadingIndicatorView.setVisibility(View.GONE);
+//        avLoadingIndicatorView.hide();
     }
+
+    static class QueueHolder extends RecyclerView.ViewHolder {
+        public TextView firmName;
+        public TextView serviceType;
+        public TextView address;
+        public TextView purpose;
+        public TextView expectedTime;
+        public TextView currentStatus;
+        public TextView regTime;
+        public TextView regDate;
+        public ImageView firmImage;
+        private final TextView currentToken;
+        private final TextView totalToken;
+        public TextView myToken;
+        public Button button;
+        public LinearLayout feedback;
+        public RatingBar ratingBar;
+        public ConstraintLayout hiddenLayout;
+
+
+        public QueueHolder(@NonNull View itemView) {
+            super(itemView);
+            firmName = itemView.findViewById(R.id.firmName);
+            serviceType = itemView.findViewById(R.id.serviceType);
+            address = itemView.findViewById(R.id.address);
+            purpose = itemView.findViewById(R.id.purpose);
+            expectedTime = itemView.findViewById(R.id.expectedTime);
+            currentStatus = itemView.findViewById(R.id.currentStatus);
+            regTime = itemView.findViewById(R.id.regTime);
+            regDate = itemView.findViewById(R.id.regDate);
+            hiddenLayout = itemView.findViewById(R.id.cl_center);
+            firmImage = itemView.findViewById(R.id.firmLogo);
+            currentToken = itemView.findViewById(R.id.currentToken);
+            totalToken = itemView.findViewById(R.id.totalTokens);
+            myToken = itemView.findViewById(R.id.myToken);
+            button = itemView.findViewById(R.id.button);
+            feedback = itemView.findViewById(R.id.feedback);
+            ratingBar = itemView.findViewById(R.id.ratingBar);
+        }
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseRecyclerAdapter.startListening();
+    }
+
 
     @Override
     public void onStop() {
         super.onStop();
         firebaseRecyclerAdapter.stopListening();
-        Toast.makeText(getContext(), "bye", Toast.LENGTH_SHORT).show();
     }
 }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebView;
 import android.widget.RatingBar;
 import android.widget.Toast;
@@ -29,7 +28,7 @@ import java.util.Objects;
 public class AboutUsActivity extends AppCompatActivity {
 
     private WebView mWebview;
-    FloatingActionButton shubhL, pushpL, Gmail;
+    FloatingActionButton rohitL, shubhL,maroofL, ujjwalL;
     ExpandableLayout faqs_Expand;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -46,21 +45,37 @@ public class AboutUsActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
-        shubhL = findViewById(R.id.shubhLinkedIn);
-        Gmail = findViewById(R.id.gmailLogin);
+        rohitL = findViewById(R.id.rohitLinkedIn);
+        maroofL =findViewById(R.id.maroofLinkedIN);
+        shubhL=findViewById(R.id.shubhLinkedIn);
+        ujjwalL = findViewById(R.id.ujjwalLinkedin);
 
-        shubhL.setOnClickListener(view -> {
-            Uri uri = Uri.parse("https://www.linkedin.com/in/keshrishubham/"); // missing 'http://' will cause crashed
+        rohitL.setOnClickListener(view -> {
+            Uri uri = Uri.parse("https://www.linkedin.com/in/rohit-tiwari-200115152/"); // missing 'http://' will cause crashed
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         });
-        Gmail.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("message/rfc822");
-            intent.putExtra(Intent.EXTRA_EMAIL, new String[] { "spcodelab@gmail.com" });
-            intent.putExtra(Intent.EXTRA_SUBJECT, "I Want to hire you!");
-            startActivity(Intent.createChooser(intent, ""));
+        maroofL.setOnClickListener(view -> {
+            Uri uri = Uri.parse("https://www.linkedin.com/in/mohd-maroof-a74b4316b/"); // missing 'http://' will cause crashed
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         });
+        ujjwalL.setOnClickListener(view -> {
+            Uri uri = Uri.parse("https://www.linkedin.com/in/ujjawal-bhusal-8479b31a9/"); // missing 'http://' will cause crashed
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+        ujjwalL.setOnClickListener(view -> {
+            Uri uri = Uri.parse("https://www.linkedin.com/in/ujjawal-bhusal-8479b31a9/"); // missing 'http://' will cause crashed
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+        shubhL.setOnClickListener(view -> {
+            Uri uri = Uri.parse("https://www.linkedin.com/in/ujjawal-bhusal-8479b31a9/"); // missing 'http://' will cause crashed
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        });
+
 
 
 

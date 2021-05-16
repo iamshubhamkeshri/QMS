@@ -40,7 +40,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.spcodelab.qms.models.PartnerDataModel;
+import com.spcodelab.qms.models.PartnerRatingModel;
 import com.spcodelab.qms.models.QueuePartnerModel;
+import com.spcodelab.qms.models.QueueStatusModel;
 import com.spcodelab.qms.models.QueueUserModel;
 import com.spcodelab.qms.models.UserDataModel;
 import com.wang.avi.AVLoadingIndicatorView;
@@ -84,7 +86,7 @@ public class AvailServices extends AppCompatActivity {
             alertNoConnection(this);
 
         //current date
-        date = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(new Date());
+        date = new SimpleDateFormat("yyyy-M-dd", Locale.getDefault()).format(new Date());
 
 
         Toolbar toolbar = findViewById(R.id.toolbar_attempt);
@@ -117,6 +119,7 @@ public class AvailServices extends AppCompatActivity {
 
         });
     }
+
 
     private void loadLoactionArray() {
 
@@ -163,11 +166,24 @@ public class AvailServices extends AppCompatActivity {
                 holder.firmName.setText(model.getFirmName());
                 holder.address.setText(model.getAddress());
 
-                if (!model.getRating().equals("0")) {
-                    holder.rating.setText(model.getRating());
-                } else {
-                    holder.rating.setText("NA");
-                }
+                FirebaseDatabase.getInstance().getReference().child("PartnerRating").child(model.getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            PartnerRatingModel ratingModel = snapshot.getValue(PartnerRatingModel.class);
+                            if (!ratingModel.getRating().equals("0")) {
+                                holder.rating.setText(ratingModel.getRating());
+                            } else {
+                                holder.rating.setText("NA");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
 
                 RequestOptions options = new RequestOptions()
@@ -203,8 +219,23 @@ public class AvailServices extends AppCompatActivity {
                             }
                         }));
 
-                holder.totalToken.setText(model.getTotalToken());
-                holder.currentToken.setText(model.getCurrentToken());
+
+                FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(model.getUid()).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            QueueStatusModel qModel = snapshot.getValue(QueueStatusModel.class);
+                            holder.totalToken.setText(qModel.getTotalToken());
+                            holder.currentToken.setText(qModel.getCurrentToken());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
 
             }
 
@@ -220,9 +251,9 @@ public class AvailServices extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                if (snapshot.exists()){
-                    UserDataModel uModel=snapshot.getValue(UserDataModel.class);
-                    JoinQueue(pModel,uModel);
+                if (snapshot.exists()) {
+                    UserDataModel uModel = snapshot.getValue(UserDataModel.class);
+                    JoinQueue(pModel, uModel);
                 }
             }
 
@@ -236,10 +267,10 @@ public class AvailServices extends AppCompatActivity {
     //current time
     private String getCurrentTime() {
         String delegate = "hh:mm aaa";
-        return (String) DateFormat.format(delegate,Calendar.getInstance().getTime());
+        return (String) DateFormat.format(delegate, Calendar.getInstance().getTime());
     }
 
-    private void JoinQueue(PartnerDataModel pModel,UserDataModel uModel) {
+    private void JoinQueue(PartnerDataModel pModel, UserDataModel uModel) {
 
         final int PERMISSION_REQUEST_CAMERA = 0;
 
@@ -289,7 +320,7 @@ public class AvailServices extends AppCompatActivity {
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                         == PackageManager.PERMISSION_GRANTED) {
                     // Permission is already available, start camera preview
-                    if (status.getVisibility()==View.VISIBLE){
+                    if (status.getVisibility() == View.VISIBLE) {
                         status.setVisibility(View.GONE);
                     }
                     mCodeScanner.startPreview();
@@ -310,60 +341,66 @@ public class AvailServices extends AppCompatActivity {
                         }).show();
 
                     } else {
+                        ActivityCompat.requestPermissions(this,
+                                new String[]{Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA);
                         Snackbar.make(linearLayout, "Give camera permission from app setting", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             } else {
-                String purpose_text=purposeVisit.getText().toString();
-                if (!TextUtils.isEmpty(purpose_text)) {
+                String purpose_text = purposeVisit.getText().toString();
+                if (TextUtils.isEmpty(purpose_text)) {
                     purposeVisit.setError("Required!");
-                }else{
-                    FirebaseDatabase.getInstance().getReference().child("ServicesAtLocation")
-                            .child(pModel.getLocation()).child(service_Type).child(pModel.getUid())
-                            .child("totalToken").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            int queueSize;
+                } else {
+                    FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(pModel.getUid())
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    int queueSize;
 
-                            if (snapshot.exists()) {
+                                    if (snapshot.exists()) {
+                                        QueueStatusModel queueStatusModel = snapshot.getValue(QueueStatusModel.class);
+                                        queueSize = Integer.parseInt(queueStatusModel.getTotalToken());
 
-                                queueSize = Integer.parseInt(String.valueOf(snapshot.getValue()));
+                                        //setting queue for partner
+                                        QueuePartnerModel queuePartnerModel = new QueuePartnerModel(uModel.name, uModel.email, purpose_text, uModel.imageUrl,
+                                                getCurrentTime(), "In Queue", String.valueOf(queueSize + 1), currentUserUID);
 
-                                //setting queue for partner
-                                QueuePartnerModel queuePartnerModel = new QueuePartnerModel(uModel.name,uModel.email,purpose_text,uModel.imageUrl,
-                                        getCurrentTime(),"In Queue",String.valueOf(queueSize+1),currentUserUID);
-
-                                FirebaseDatabase.getInstance().getReference().child("QueuePartner").child(pModel.getUid()).child(date).child(currentUserUID).setValue(queuePartnerModel);
-
-
-                                //setting queue for user
-                                QueueUserModel queueUserModel = new QueueUserModel(pModel.getFirmName(),pModel.getUid(),pModel.getServiceType(),
-                                        pModel.getLocation(),pModel.getAddress(),pModel.getImageUrl(),date,getCurrentTime(),"In Queue",
-                                        pModel.getAverageServiceTime(),pModel.getCurrentToken(),String.valueOf(queueSize+1),pModel.getTotalToken(),purpose_text);
-
-                                FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID)
-                                        .child(pModel.getUid()).setValue(queueUserModel);
+                                        FirebaseDatabase.getInstance().getReference().child("QueuePartner").child(pModel.getUid()).child(date).child(currentUserUID).setValue(queuePartnerModel);
 
 
-                                //updating total queue size
-                                FirebaseDatabase.getInstance().getReference().child("ServicesAtLocation")
-                                        .child(pModel.getLocation()).child(service_Type).child(pModel.getUid())
-                                        .child("totalToken").setValue(String.valueOf(queueSize + 1));
+                                        //setting queue for user
+                                        QueueUserModel queueUserModel = new QueueUserModel(pModel.getFirmName(), pModel.getUid(), pModel.getServiceType(),
+                                                pModel.getLocation(), pModel.getAddress(), pModel.getImageUrl(), date, getCurrentTime(), "In Queue",
+                                                pModel.getAverageServiceTime(), String.valueOf(queueSize + 1), purpose_text, "0");
+
+                                        FirebaseDatabase.getInstance().getReference().child("QueueUser").child(currentUserUID)
+                                                .child(pModel.getUid()).setValue(queueUserModel);
 
 
+                                        //updating total queue size
+                                        FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(pModel.getUid())
+                                                .child("totalToken").setValue(String.valueOf(queueSize + 1));
 
-                                Toast.makeText(AvailServices.this, "Token Generated Successfully\nWait For Your Turn", Toast.LENGTH_SHORT).show();
-                                dialog.dismiss();
-                            }else{
-                                Toast.makeText(AvailServices.this, "Token Generation Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                                        //updating current Token if No one is available to available
+                                        if (queueStatusModel.getCurrentToken().equals("NA")) {
+                                            FirebaseDatabase.getInstance().getReference().child("QueueStatus").child(pModel.getUid())
+                                                    .child("currentToken").setValue(String.valueOf(queueSize + 1));
+                                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
 
-                        }
-                    });
+                                        Toast.makeText(AvailServices.this, "Token Generated Successfully\n     Wait For Your Turn", Toast.LENGTH_SHORT).show();
+                                        dialog.dismiss();
+                                    } else {
+                                        Toast.makeText(AvailServices.this, "Token Generation Failed", Toast.LENGTH_SHORT).show();
+                                        onBackPressed();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                 }
             }
 
@@ -379,8 +416,8 @@ public class AvailServices extends AppCompatActivity {
         public TextView rating;
         public TextView address;
         public ImageView firmImage;
-        private final TextView currentToken;
-        private final TextView totalToken;
+        public TextView currentToken;
+        public TextView totalToken;
         public Button joinQueue;
 
         public ServiceHolder(@NonNull View itemView) {
@@ -405,17 +442,6 @@ public class AvailServices extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
 
     @Override
     public void onBackPressed() {

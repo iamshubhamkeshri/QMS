@@ -1,10 +1,10 @@
 package com.spcodelab.qms.models;
 
 public class QueueUserModel {
-    String firmName, firmUID, serviceType, location, address, firmLogoUrl, regDate, regTime, status, avgServiceTime, currentToken, myToken, totalToken, rating, purposeOfVisit;
+    String firmName, firmUID, serviceType, location, address, firmLogoUrl, regDate, regTime, status, avgServiceTime, myToken, rating, purposeOfVisit;
 
     public QueueUserModel(String firmName, String firmUID, String serviceType, String location, String address, String firmLogoUrl, String regDate,
-                          String regTime, String status, String avgServiceTime, String currentToken, String myToken, String totalToken, String purposeOfVisit) {
+                          String regTime, String status, String avgServiceTime , String myToken, String purposeOfVisit, String rating) {
         this.firmName = firmName;
         this.firmUID = firmUID;
         this.serviceType = serviceType;
@@ -15,10 +15,9 @@ public class QueueUserModel {
         this.regTime = regTime;
         this.status = status;
         this.avgServiceTime = avgServiceTime;
-        this.currentToken = currentToken;
         this.myToken = myToken;
-        this.totalToken = totalToken;
         this.purposeOfVisit = purposeOfVisit;
+        this.rating=rating;
     }
 
     public QueueUserModel() {
@@ -57,29 +56,17 @@ public class QueueUserModel {
         return regTime;
     }
 
-    public String getStatus() {
-        return status;
-    }
+    public String getStatus() { return status; }
 
     public String getAvgServiceTime() {
         return avgServiceTime;
-    }
-
-    public String getCurrentToken() {
-        return currentToken;
     }
 
     public String getMyToken() {
         return myToken;
     }
 
-    public String getTotalToken() {
-        return totalToken;
-    }
-
-    public String getRating() {
-        return rating;
-    }
+    public String getRating() { return rating; }
 
     public String getPurposeOfVisit() { return purposeOfVisit; }
 }

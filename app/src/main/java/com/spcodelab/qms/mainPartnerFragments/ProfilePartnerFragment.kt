@@ -18,6 +18,7 @@ import com.spcodelab.qms.CommanClass.alertNoConnection
 import com.spcodelab.qms.CommanClass.isNetworkAvailable
 import com.spcodelab.qms.R
 import com.spcodelab.qms.models.PartnerDataModel
+import com.spcodelab.qms.models.PartnerRatingModel
 import com.wang.avi.AVLoadingIndicatorView
 import java.util.regex.Pattern
 
@@ -31,8 +32,6 @@ class ProfilePartnerFragment : Fragment() {
     private lateinit var serviceType: TextView
     private lateinit var rating: TextView
     private lateinit var ratedBy: TextView
-    private lateinit var currentToken: TextView
-    private lateinit var totalToken: TextView
 
     var PartnerDataLocation: String? = null
     var profileImageUrl: String? = null
@@ -65,8 +64,6 @@ class ProfilePartnerFragment : Fragment() {
         firm_name = view.findViewById(R.id.regName)
         rating = view.findViewById(R.id.rating)
         ratedBy = view.findViewById(R.id.ratedby)
-        currentToken = view.findViewById(R.id.currentToken)
-        totalToken = view.findViewById(R.id.totalTokens)
         address = view.findViewById(R.id.regAddress)
         email_ = view.findViewById(R.id.regEmail)
         avgSeviceTime = view.findViewById(R.id.regAverageServiceTime)
@@ -116,6 +113,20 @@ class ProfilePartnerFragment : Fragment() {
     private fun readUserData() {
         val user: FirebaseUser? = mAuth.currentUser
         if (user != null) {
+            FirebaseDatabase.getInstance().reference.child("PartnerRating").child(user.uid).addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val ratingData = snapshot.getValue(PartnerRatingModel::class.java)!!
+                        ratedBy.text = ratingData.ratedBy
+                        rating.text = ratingData.rating
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+            })
+
             FirebaseDatabase.getInstance().reference.child("PartnersData").child(user.uid).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
@@ -130,16 +141,8 @@ class ProfilePartnerFragment : Fragment() {
                                     avgSeviceTime.setText(userData.averageServiceTime)
                                     location_.text = userData.location
                                     serviceType.text = userData.serviceType
-                                    ratedBy.text = userData.ratedBy
-                                    rating.text = userData.rating
-                                    currentToken.text = userData.currentToken
-                                    totalToken.text = userData.totalToken
-
-
                                     profileImageUrl = userData.imageUrl
                                     uid = userData.uid
-
-
                                     showImage(profileImageUrl.toString())
                                 }
                             }
@@ -203,7 +206,7 @@ class ProfilePartnerFragment : Fragment() {
 
     private fun saveData(firmName: String, serviceType: String, location: String, address: String, averageServiceTime: String, email: String, url: String) {
 
-        val mUserData = PartnerDataModel(firmName, serviceType, location, address, email, url, uid, averageServiceTime, currentToken.text.toString(), totalToken.text.toString(), rating.text.toString(), ratedBy.text.toString())
+        val mUserData = PartnerDataModel(firmName, serviceType, location, address, email, url, uid, averageServiceTime)
         val user: FirebaseUser? = mAuth.currentUser
 
         if (user != null) {

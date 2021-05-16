@@ -83,7 +83,7 @@ class MainActivityUser : AppCompatActivity() {
             loadFragment(fragment)
         }
     }
-    private fun loadFragment(fragment: Fragment): Boolean {
+    fun loadFragment(fragment: Fragment): Boolean {
         if (fragment != null) {
             supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)

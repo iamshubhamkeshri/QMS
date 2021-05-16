@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="18dp"
+    android:layout_margin="5dp"
     android:background="@drawable/bg_ticket_top"
     android:orientation="vertical">
 
@@ -20,7 +20,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/firmName"
+                android:id="@+id/cusName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Shubham Keshri"
@@ -29,7 +29,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/serviceType"
+                android:id="@+id/cusEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Email"
@@ -37,7 +37,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/address"
+                android:id="@+id/cusPurpose"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Purpose of visit"
@@ -46,7 +46,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/firmLogo"
+            android:id="@+id/cusImage"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:src="@drawable/ic_shop" />
@@ -63,11 +63,11 @@
             android:id="@+id/cl_head"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@color/Beige">
+            android:background="@color/Beige"
+            android:gravity="center">
 
             <TextView
-                android:id="@+id/regTime"
+                android:id="@+id/cusRegTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -76,22 +76,22 @@
                 android:paddingBottom="10dp"
                 android:text="Reg. Time 10:45 Am"
                 android:textColor="@color/black"
-                android:textSize="16sp"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/cl_center"
-            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cl_head"
-            android:background="@color/Beige">
+            android:background="@color/Beige"
+            android:visibility="visible">
+
             <TextView
-                android:layout_weight="1"
-                android:id="@+id/currentStatus"
+                android:id="@+id/cusCurrentStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:gravity="center"
                 android:lineSpacingMultiplier="1.2"
                 android:paddingTop="20dp"
@@ -99,7 +99,7 @@
                 android:text="Current Status\nCancelled"
                 android:textColor="#000"
                 android:textSize="16sp"
-                />
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -113,16 +113,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="Current Token"
+                    android:text="Token No."
+                    android:textColor="@color/black"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/currentToken"
-                    android:layout_width="80dp"
+                    android:id="@+id/cusCurrentToken"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="16"
-                    android:textSize="60dp" />
+                    android:text="NA"
+                    android:gravity="center"
+                    android:textColor="@color/Sunset_Orange"
+                    android:textSize="50dp" />
 
             </LinearLayout>
 
@@ -145,7 +148,6 @@
                 app:layout_constraintBottom_toTopOf="@+id/expectedTime"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent" />
-
 
 
             <LinearLayout
@@ -180,42 +182,45 @@
 
 
         <LinearLayout
+            android:id="@+id/hideLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/cl_center"
             android:layout_marginStart="8dp"
-            android:paddingEnd="8dp"
-            android:id="@+id/hideLayout"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:paddingEnd="8dp">
+
             <Button
-                android:id="@+id/notify"
+                android:id="@+id/cusNotify"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/flat_orange_button"
                 android:text="NOTIFY"
-                android:textColor="#ffffff"
-                android:layout_marginBottom="8dp"/>
+                android:textColor="#ffffff" />
+
             <Button
-                android:id="@+id/cancel"
+                android:id="@+id/cusCancel"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
                 android:background="@drawable/flat_orange_button"
                 android:text="CANCEL"
                 android:textColor="#ffffff" />
+
             <Button
-                android:id="@+id/complete"
+                android:id="@+id/cusComplete"
                 style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
                 android:background="@drawable/flat_orange_button"
-                android:text="CPMPLETE"
+                android:text="COMPLETE"
                 android:textColor="#ffffff" />
         </LinearLayout>
 

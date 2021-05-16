@@ -25,6 +25,8 @@ import com.spcodelab.qms.CommanClass.*
 import com.spcodelab.qms.R
 import com.spcodelab.qms.mainActivity.MainActivityPartner
 import com.spcodelab.qms.models.PartnerDataModel
+import com.spcodelab.qms.models.PartnerRatingModel
+import com.spcodelab.qms.models.QueueStatusModel
 import com.wang.avi.AVLoadingIndicatorView
 import org.angmarch.views.NiceSpinner
 import java.io.ByteArrayOutputStream
@@ -91,12 +93,14 @@ class SignupActivityPartner : AppCompatActivity() {
         val location_spinner = findViewById<View>(R.id.signup_location) as NiceSpinner
 
         findViewById<TextView>(R.id.signup_location).setOnClickListener {
+            //loadLoactionArray()
             location_spinner.attachDataSource(locations)
+
         }
 
-        location_spinner.setOnSpinnerItemSelectedListener { parent, view, position, id ->
+       location_spinner.setOnSpinnerItemSelectedListener { parent, view, position, id ->
             Location = parent.getItemAtPosition(position).toString()
-        }
+       }
 
         val service_spinner = findViewById<View>(R.id.signup_service_type) as NiceSpinner
         val dataset: List<String> = LinkedList(Arrays.asList("Hospital", "Hospital", "Bank", "RailWays", "Airport", "Movie", "Saloon", "Restaurant", "ServiceCenter"))
@@ -301,7 +305,7 @@ class SignupActivityPartner : AppCompatActivity() {
     private fun saveData(firmName: String, address: String, avg_service_time: String, email: String, imageUrl: String) {
 
 
-        val mUserData = PartnerDataModel(firmName, Service, Location, address, email, imageUrl, mAuth.currentUser?.uid, avg_service_time, "0", "0", "0", "0")
+        val mUserData = PartnerDataModel(firmName, Service, Location, address, email, imageUrl, mAuth.currentUser?.uid, avg_service_time)
         val user: FirebaseUser? = mAuth.currentUser
 
         if (user != null) {
@@ -316,14 +320,18 @@ class SignupActivityPartner : AppCompatActivity() {
             FirebaseDatabase.getInstance().reference.child("UserType").child(user.uid)
                     .setValue("Partner")
 
+            //setting Queue Status
+            val mQueueStatusData = QueueStatusModel("0","NA","null")
+            FirebaseDatabase.getInstance().reference.child("QueueStatus").child(user.uid)
+                    .setValue(mQueueStatusData)
 
-            FirebaseDatabase.getInstance().reference.child("QueuePartner").child(user.uid)
-                    .setValue("NotStarted")
+            //setting Partner Rating
+            val mPartnerRatingData = PartnerRatingModel("0","0")
+            FirebaseDatabase.getInstance().reference.child("PartnerRating").child(user.uid)
+                    .setValue(mPartnerRatingData)
 
             FirebaseDatabase.getInstance().reference.child("ServicesAtLocation")
                     .child(Location.toString()).child(Service.toString()).child(user.uid).setValue(mUserData)
-
-
 
             mDatabaseReference.child("PartnersData").child(user.uid)
                     .setValue("ServicesAtLocation/" + Location.toString() + "/" + Service.toString() + "/" + user.uid) //need an object of a

@@ -1,10 +1,10 @@
 package com.spcodelab.qms.models;
 
 public class PartnerDataModel {
-    public String firmName, serviceType, location, address, email, imageUrl, uid, averageServiceTime,currentToken,totalToken,rating,ratedBy;
+    public String firmName, serviceType, location, address, email, imageUrl, uid, averageServiceTime;
 
-    public PartnerDataModel(String firmName, String serviceType, String location, String address, String email, String imageUrl,
-                            String uid, String averageServiceTime,String currentToken, String totalToken,String rating, String ratedBy) {
+    public PartnerDataModel(String firmName, String serviceType, String location, String address,
+                            String email, String imageUrl, String uid, String averageServiceTime) {
         this.firmName = firmName;
         this.serviceType = serviceType;
         this.location = location;
@@ -13,10 +13,6 @@ public class PartnerDataModel {
         this.imageUrl = imageUrl;
         this.uid = uid;
         this.averageServiceTime = averageServiceTime;
-        this.currentToken = currentToken;
-        this.totalToken = totalToken;
-        this.rating = rating;
-        this.ratedBy = ratedBy;
     }
 
 
@@ -54,21 +50,5 @@ public class PartnerDataModel {
 
     public String getAverageServiceTime() {
         return averageServiceTime;
-    }
-
-    public String getCurrentToken() {
-        return currentToken;
-    }
-
-    public String getTotalToken() {
-        return totalToken;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public String getRatedBy() {
-        return ratedBy;
     }
 }
