@@ -45,7 +45,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/avail_services_location"
-        android:padding="10dp"
         tools:listitem="@layout/card_service_provider"
         />
     <com.wang.avi.AVLoadingIndicatorView
